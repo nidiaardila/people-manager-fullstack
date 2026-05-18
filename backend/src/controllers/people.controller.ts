@@ -2,10 +2,57 @@ import { Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
 import { people } from '../data/people.data';
-import { Person, PersonRequestBody } from '../models/person.model';
+import { Person, PersonRequestBody, PersonStatus } from '../models/person.model';
 
-export function getPeople(_req: Request, res: Response): void {
-  res.json(people);
+function getQueryValue(value: unknown): string {
+  return typeof value === 'string' ? value.trim().toLowerCase() : '';
+}
+
+function isValidStatus(status: string): status is PersonStatus {
+  return status === 'active' || status === 'inactive';
+}
+
+export function getPeople(req: Request, res: Response): void {
+  const search = getQueryValue(req.query['search']);
+  const status = getQueryValue(req.query['status']);
+  const city = getQueryValue(req.query['city']);
+  const profession = getQueryValue(req.query['profession']);
+
+  let filteredPeople = [...people];
+
+  if (search) {
+    filteredPeople = filteredPeople.filter((person) => {
+      const fullName = `${person.firstName} ${person.lastName}`.toLowerCase();
+
+      return (
+        fullName.includes(search) ||
+        person.email.toLowerCase().includes(search) ||
+        person.phone.toLowerCase().includes(search) ||
+        person.city.toLowerCase().includes(search) ||
+        person.profession.toLowerCase().includes(search)
+      );
+    });
+  }
+
+  if (status && isValidStatus(status)) {
+    filteredPeople = filteredPeople.filter(
+      (person) => person.status === status
+    );
+  }
+
+  if (city) {
+    filteredPeople = filteredPeople.filter((person) =>
+      person.city.toLowerCase().includes(city)
+    );
+  }
+
+  if (profession) {
+    filteredPeople = filteredPeople.filter((person) =>
+      person.profession.toLowerCase().includes(profession)
+    );
+  }
+
+  res.json(filteredPeople);
 }
 
 export function getPersonById(req: Request, res: Response): void {

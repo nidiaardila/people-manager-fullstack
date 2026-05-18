@@ -14,7 +14,14 @@ app.get('/', (_req, res) => {
     message: 'Welcome to People Manager API',
     endpoints: {
       health: '/api/health',
-      people: '/api/people'
+      people: '/api/people',
+      personById: '/api/people/:id'
+    },
+    filters: {
+      search: '/api/people?search=laura',
+      status: '/api/people?status=active',
+      city: '/api/people?city=Madrid',
+      profession: '/api/people?profession=developer'
     }
   });
 });
