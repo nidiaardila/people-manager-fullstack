@@ -1,0 +1,35 @@
+<section class="page-header">
+  <p class="eyebrow">People Manager API</p>
+  <h1>Gestor de personas</h1>
+  <p>
+    Aplicación full stack con Angular, Express y una API REST propia para crear,
+    consultar, editar y eliminar personas.
+  </p>
+</section>
+
+@if (loading()) {
+  <app-loading message="Cargando personas..."></app-loading>
+} @else if (error()) {
+  <app-error-message [message]="error()"></app-error-message>
+} @else {
+  <p class="results-count">
+    Mostrando {{ people().length }} personas
+  </p>
+
+  @if (people().length === 0) {
+    <div class="empty-state">
+      <mat-icon>group_off</mat-icon>
+      <h2>No hay personas registradas</h2>
+      <p>Cuando crees personas desde el formulario aparecerán aquí.</p>
+    </div>
+  } @else {
+    <div class="people-grid">
+      @for (person of people(); track person.id) {
+        <app-person-card
+          [person]="person"
+          (deletePerson)="deletePerson($event)"
+        ></app-person-card>
+      }
+    </div>
+  }
+}

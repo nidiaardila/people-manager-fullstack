@@ -1,0 +1,38 @@
+<mat-card class="person-card">
+  <mat-card-header>
+    <div mat-card-avatar class="avatar">
+      {{ person.firstName.charAt(0) }}{{ person.lastName.charAt(0) }}
+    </div>
+
+    <mat-card-title>{{ fullName }}</mat-card-title>
+    <mat-card-subtitle>{{ person.profession || 'Sin profesión' }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>
+      <mat-icon>email</mat-icon>
+      {{ person.email }}
+    </p>
+
+    <p>
+      <mat-icon>phone</mat-icon>
+      {{ person.phone || 'Sin teléfono' }}
+    </p>
+
+    <p>
+      <mat-icon>location_on</mat-icon>
+      {{ person.city || 'Sin ciudad' }}
+    </p>
+
+    <span class="status" [class.inactive]="person.status === 'inactive'">
+      {{ person.status === 'active' ? 'Activo' : 'Inactivo' }}
+    </span>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="warn" type="button" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </mat-card-actions>
+</mat-card>

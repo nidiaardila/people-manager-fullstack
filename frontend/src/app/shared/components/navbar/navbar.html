@@ -1,0 +1,17 @@
+<mat-toolbar class="navbar">
+  <div class="brand" routerLink="/">
+    <mat-icon>groups</mat-icon>
+    <span>People Manager</span>
+  </div>
+
+  <nav>
+    <a
+      mat-button
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Personas
+    </a>
+  </nav>
+</mat-toolbar>
