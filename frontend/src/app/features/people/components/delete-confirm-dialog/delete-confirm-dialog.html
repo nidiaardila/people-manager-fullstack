@@ -1,0 +1,30 @@
+<div class="dialog-content">
+  <div class="dialog-icon">
+    <mat-icon>delete_forever</mat-icon>
+  </div>
+
+  <h2 mat-dialog-title>¿Eliminar persona?</h2>
+
+  <mat-dialog-content>
+    <p>
+      Vas a eliminar a
+      <strong>{{ data.fullName }}</strong>
+      de la lista.
+    </p>
+
+    <p class="warning">
+      Esta acción no se podrá deshacer mientras el backend esté activo.
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" class="cancel-button" (click)="cancel()">
+      Cancelar
+    </button>
+
+    <button mat-flat-button type="button" class="delete-button" (click)="confirm()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </mat-dialog-actions>
+</div>

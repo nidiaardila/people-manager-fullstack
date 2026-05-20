@@ -1,21 +1,31 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Person, PersonRequest } from '../../../../core/models/person.model';
 import { PeopleService } from '../../../../core/services/people';
 import { ErrorMessage } from '../../../../shared/components/error-message/error-message';
 import { Loading } from '../../../../shared/components/loading/loading';
+import { DeleteConfirmDialog } from '../../components/delete-confirm-dialog/delete-confirm-dialog';
 import { PersonCard } from '../../components/person-card/person-card';
 import { PersonForm } from '../../components/person-form/person-form';
 
 @Component({
   selector: 'app-people-list',
-  imports: [MatIconModule, PersonForm, PersonCard, Loading, ErrorMessage],
+  imports: [
+    MatIconModule,
+    MatDialogModule,
+    PersonForm,
+    PersonCard,
+    Loading,
+    ErrorMessage
+  ],
   templateUrl: './people-list.html',
   styleUrl: './people-list.scss'
 })
 export class PeopleList implements OnInit {
   private readonly peopleService = inject(PeopleService);
+  private readonly dialog = inject(MatDialog);
 
   @ViewChild(PersonForm) private personForm?: PersonForm;
 
@@ -112,6 +122,21 @@ export class PeopleList implements OnInit {
   cancelEdit(): void {
     this.selectedPerson.set(null);
     this.personForm?.resetForm();
+  }
+
+  confirmDeletePerson(person: Person): void {
+    const dialogRef = this.dialog.open(DeleteConfirmDialog, {
+      width: '420px',
+      data: {
+        fullName: `${person.firstName} ${person.lastName}`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.deletePerson(person.id);
+      }
+    });
   }
 
   deletePerson(id: string): void {

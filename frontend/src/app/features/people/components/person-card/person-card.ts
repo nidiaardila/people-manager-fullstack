@@ -15,7 +15,7 @@ export class PersonCard {
   @Input({ required: true }) person!: Person;
 
   @Output() editPerson = new EventEmitter<Person>();
-  @Output() deletePerson = new EventEmitter<string>();
+  @Output() deletePerson = new EventEmitter<Person>();
 
   get fullName(): string {
     return `${this.person.firstName} ${this.person.lastName}`;
@@ -26,6 +26,6 @@ export class PersonCard {
   }
 
   onDelete(): void {
-    this.deletePerson.emit(this.person.id);
+    this.deletePerson.emit(this.person);
   }
 }
