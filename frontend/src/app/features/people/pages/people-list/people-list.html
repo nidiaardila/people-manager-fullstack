@@ -7,6 +7,13 @@
   </p>
 </section>
 
+<app-person-form
+  [saving]="saving()"
+  [personToEdit]="selectedPerson()"
+  (savePerson)="savePerson($event)"
+  (cancelEdit)="cancelEdit()"
+></app-person-form>
+
 @if (loading()) {
   <app-loading message="Cargando personas..."></app-loading>
 } @else if (error()) {
@@ -27,6 +34,7 @@
       @for (person of people(); track person.id) {
         <app-person-card
           [person]="person"
+          (editPerson)="editPerson($event)"
           (deletePerson)="deletePerson($event)"
         ></app-person-card>
       }

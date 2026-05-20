@@ -1,7 +1,11 @@
 .person-card {
   height: 100%;
+  min-height: 320px;
   border-radius: 22px;
   background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -11,22 +15,39 @@
     box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
   }
 
+  mat-card-header {
+    padding: 24px 24px 12px;
+  }
+
+  mat-card-title {
+    color: #111827;
+    font-weight: 800;
+  }
+
+  mat-card-subtitle {
+    color: #111827;
+    font-size: 15px;
+  }
+
   mat-card-content {
-    padding-top: 16px;
+    padding: 18px 24px 10px;
+    flex: 1;
   }
 
   p {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 8px 0;
+    margin: 9px 0;
     color: #475569;
+    font-size: 15px;
 
     mat-icon {
       color: #2563eb;
       font-size: 18px;
       width: 18px;
       height: 18px;
+      flex-shrink: 0;
     }
   }
 }
@@ -52,5 +73,59 @@
   &.inactive {
     background: #fee2e2;
     color: #991b1b;
+  }
+}
+
+.card-actions {
+  padding: 16px 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #f1f5f9;
+  background: #fbfdff;
+}
+
+.edit-button,
+.delete-button {
+  min-height: 42px;
+  border-radius: 999px;
+  font-weight: 800;
+
+  mat-icon {
+    margin-right: 6px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.edit-button {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border-color: #bfdbfe !important;
+
+  &:hover {
+    background: #dbeafe !important;
+  }
+}
+
+.delete-button {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  border-color: #fecdd3 !important;
+
+  &:hover {
+    background: #ffe4e6 !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .edit-button,
+  .delete-button {
+    width: 100%;
   }
 }

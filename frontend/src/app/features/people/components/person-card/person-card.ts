@@ -14,10 +14,15 @@ import { Person } from '../../../../core/models/person.model';
 export class PersonCard {
   @Input({ required: true }) person!: Person;
 
+  @Output() editPerson = new EventEmitter<Person>();
   @Output() deletePerson = new EventEmitter<string>();
 
   get fullName(): string {
     return `${this.person.firstName} ${this.person.lastName}`;
+  }
+
+  onEdit(): void {
+    this.editPerson.emit(this.person);
   }
 
   onDelete(): void {

@@ -5,7 +5,9 @@
     </div>
 
     <mat-card-title>{{ fullName }}</mat-card-title>
-    <mat-card-subtitle>{{ person.profession || 'Sin profesión' }}</mat-card-subtitle>
+    <mat-card-subtitle>
+      {{ person.profession || 'Sin profesión' }}
+    </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
@@ -29,8 +31,23 @@
     </span>
   </mat-card-content>
 
-  <mat-card-actions align="end">
-    <button mat-button color="warn" type="button" (click)="onDelete()">
+  <mat-card-actions class="card-actions">
+    <button
+      mat-stroked-button
+      type="button"
+      class="edit-button"
+      (click)="onEdit()"
+    >
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="delete-button"
+      (click)="onDelete()"
+    >
       <mat-icon>delete</mat-icon>
       Eliminar
     </button>

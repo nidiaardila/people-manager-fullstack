@@ -1,0 +1,124 @@
+<section class="form-card">
+  <div class="form-header">
+    <div>
+      <p class="eyebrow">
+        {{ personToEdit ? 'Edición' : 'Formulario' }}
+      </p>
+
+      <h2>
+        {{ personToEdit ? 'Editar persona' : 'Nueva persona' }}
+      </h2>
+
+      <p>
+        {{ personToEdit
+          ? 'Actualiza los datos de la persona seleccionada.'
+          : 'Registra una persona y guárdala usando tu API Express.' }}
+      </p>
+    </div>
+
+    <div class="form-icon">
+      <mat-icon>{{ personToEdit ? 'edit' : 'person_add' }}</mat-icon>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="person-form">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Nombre</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
+      <input matInput formControlName="firstName" placeholder="Ej: José" autocomplete="given-name" />
+
+      @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+        <mat-error>El nombre es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Apellido</mat-label>
+      <mat-icon matPrefix>badge</mat-icon>
+      <input matInput formControlName="lastName" placeholder="Ej: Valdés" autocomplete="family-name" />
+
+      @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+        <mat-error>El apellido es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Email</mat-label>
+      <mat-icon matPrefix>mail</mat-icon>
+      <input matInput type="email" formControlName="email" placeholder="correo@example.com" autocomplete="off" />
+
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <mat-error>Ingresa un email válido.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Teléfono</mat-label>
+      <mat-icon matPrefix>phone</mat-icon>
+      <input matInput type="tel" formControlName="phone" placeholder="+34 600 000 000" autocomplete="tel" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Ciudad</mat-label>
+      <mat-icon matPrefix>location_on</mat-icon>
+      <input matInput formControlName="city" placeholder="Madrid" autocomplete="address-level2" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Profesión</mat-label>
+      <mat-icon matPrefix>work</mat-icon>
+      <input matInput formControlName="profession" placeholder="Full Stack Developer" autocomplete="organization-title" />
+    </mat-form-field>
+
+    <div class="form-footer">
+      <div class="status-panel">
+        <div class="status-title">
+          <mat-icon>toggle_on</mat-icon>
+          <div>
+            <strong>Estado</strong>
+            <span>Selecciona el estado de la persona</span>
+          </div>
+        </div>
+
+        <mat-radio-group formControlName="status" class="status-options">
+          <mat-radio-button value="active" class="status-option active-option">
+            Activo
+          </mat-radio-button>
+
+          <mat-radio-button value="inactive" class="status-option inactive-option">
+            Inactivo
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div class="form-actions">
+        @if (personToEdit) {
+          <button
+            mat-stroked-button
+            type="button"
+            class="clear-button"
+            (click)="onCancelEdit()"
+          >
+            <mat-icon>close</mat-icon>
+            Cancelar
+          </button>
+        } @else {
+          <button
+            mat-stroked-button
+            type="button"
+            class="clear-button"
+            (click)="resetForm()"
+          >
+            <mat-icon>restart_alt</mat-icon>
+            Limpiar
+          </button>
+        }
+
+        <button mat-flat-button type="submit" class="save-button" [disabled]="saving">
+          <mat-icon>{{ personToEdit ? 'update' : 'save' }}</mat-icon>
+          {{ saving ? 'Guardando...' : personToEdit ? 'Actualizar persona' : 'Guardar persona' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</section>
