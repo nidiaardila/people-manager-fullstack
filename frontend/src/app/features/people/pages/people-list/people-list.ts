@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { Person, PersonRequest } from '../../../../core/models/person.model';
+import { Person, PersonRequest, PersonStatus } from '../../../../core/models/person.model';
 import { PeopleService } from '../../../../core/services/people';
 import { ErrorMessage } from '../../../../shared/components/error-message/error-message';
 import { Loading } from '../../../../shared/components/loading/loading';
 import { DeleteConfirmDialog } from '../../components/delete-confirm-dialog/delete-confirm-dialog';
+import { PeopleFilter } from '../../components/people-filter/people-filter';
 import { PersonCard } from '../../components/person-card/person-card';
 import { PersonForm } from '../../components/person-form/person-form';
 
@@ -16,6 +17,7 @@ import { PersonForm } from '../../components/person-form/person-form';
     MatIconModule,
     MatDialogModule,
     PersonForm,
+    PeopleFilter,
     PersonCard,
     Loading,
     ErrorMessage
@@ -31,6 +33,8 @@ export class PeopleList implements OnInit {
 
   readonly people = signal<Person[]>([]);
   readonly selectedPerson = signal<Person | null>(null);
+  readonly searchTerm = signal('');
+  readonly selectedStatus = signal<PersonStatus | 'all'>('all');
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly error = signal('');
@@ -43,16 +47,31 @@ export class PeopleList implements OnInit {
     this.loading.set(true);
     this.error.set('');
 
-    this.peopleService.getPeople().subscribe({
-      next: (people: Person[]) => {
-        this.people.set(people);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('No pudimos cargar las personas.');
-        this.loading.set(false);
-      }
-    });
+    this.peopleService
+      .getPeople({
+        search: this.searchTerm().trim(),
+        status: this.selectedStatus()
+      })
+      .subscribe({
+        next: (people: Person[]) => {
+          this.people.set(people);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('No pudimos cargar las personas.');
+          this.loading.set(false);
+        }
+      });
+  }
+
+  applyFilters(): void {
+    this.loadPeople();
+  }
+
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedStatus.set('all');
+    this.loadPeople();
   }
 
   savePerson(personRequest: PersonRequest): void {
@@ -69,10 +88,10 @@ export class PeopleList implements OnInit {
     this.error.set('');
 
     this.peopleService.createPerson(personRequest).subscribe({
-      next: (newPerson: Person) => {
-        this.people.update((people) => [newPerson, ...people]);
+      next: () => {
         this.saving.set(false);
         this.personForm?.resetForm();
+        this.loadPeople();
       },
       error: () => {
         this.error.set('No pudimos crear la persona.');
@@ -92,16 +111,11 @@ export class PeopleList implements OnInit {
     this.error.set('');
 
     this.peopleService.updatePerson(person.id, personRequest).subscribe({
-      next: (updatedPerson: Person) => {
-        this.people.update((people) =>
-          people.map((item) =>
-            item.id === updatedPerson.id ? updatedPerson : item
-          )
-        );
-
+      next: () => {
         this.selectedPerson.set(null);
         this.saving.set(false);
         this.personForm?.resetForm();
+        this.loadPeople();
       },
       error: () => {
         this.error.set('No pudimos actualizar la persona.');

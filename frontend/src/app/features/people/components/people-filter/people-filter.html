@@ -1,0 +1,61 @@
+<section class="filter-card">
+  <div class="filter-header">
+    <div>
+      <p class="eyebrow">Filtros</p>
+      <h2>Buscar personas</h2>
+    </div>
+
+    <mat-icon>manage_search</mat-icon>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar persona</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+
+      <input
+        matInput
+        [ngModel]="searchTerm"
+        (ngModelChange)="searchTermChange.emit($event)"
+        placeholder="Nombre, email, ciudad o profesión..."
+        (keyup.enter)="applyFilters.emit()"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="status-field">
+      <mat-label>Estado</mat-label>
+      <mat-icon matPrefix>tune</mat-icon>
+
+      <mat-select
+        [ngModel]="selectedStatus"
+        (ngModelChange)="selectedStatusChange.emit($event)"
+      >
+        <mat-option value="all">Todos</mat-option>
+        <mat-option value="active">Activos</mat-option>
+        <mat-option value="inactive">Inactivos</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button
+        mat-flat-button
+        type="button"
+        class="search-button"
+        (click)="applyFilters.emit()"
+      >
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="clear-button"
+        (click)="clearFilters.emit()"
+      >
+        <mat-icon>restart_alt</mat-icon>
+        Limpiar
+      </button>
+    </div>
+  </div>
+</section>
