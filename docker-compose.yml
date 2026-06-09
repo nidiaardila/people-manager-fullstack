@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: people-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: people_user
+      POSTGRES_PASSWORD: people_password
+      POSTGRES_DB: people_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - people_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  people_postgres_data:
