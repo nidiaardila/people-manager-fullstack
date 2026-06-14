@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { Person, PersonRequest, PersonStatus } from '../../../../core/models/person.model';
 import { PeopleService } from '../../../../core/services/people';
@@ -16,6 +17,7 @@ import { PersonForm } from '../../components/person-form/person-form';
   imports: [
     MatIconModule,
     MatDialogModule,
+    MatSnackBarModule,
     PersonForm,
     PeopleFilter,
     PersonCard,
@@ -28,6 +30,7 @@ import { PersonForm } from '../../components/person-form/person-form';
 export class PeopleList implements OnInit {
   private readonly peopleService = inject(PeopleService);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   @ViewChild(PersonForm) private personForm?: PersonForm;
 
@@ -60,6 +63,7 @@ export class PeopleList implements OnInit {
         error: () => {
           this.error.set('No pudimos cargar las personas.');
           this.loading.set(false);
+          this.showMessage('No pudimos cargar las personas.', 'error');
         }
       });
   }
@@ -92,10 +96,12 @@ export class PeopleList implements OnInit {
         this.saving.set(false);
         this.personForm?.resetForm();
         this.loadPeople();
+        this.showMessage('Persona creada correctamente.', 'success');
       },
       error: () => {
         this.error.set('No pudimos crear la persona.');
         this.saving.set(false);
+        this.showMessage('No pudimos crear la persona.', 'error');
       }
     });
   }
@@ -116,10 +122,12 @@ export class PeopleList implements OnInit {
         this.saving.set(false);
         this.personForm?.resetForm();
         this.loadPeople();
+        this.showMessage('Persona actualizada correctamente.', 'success');
       },
       error: () => {
         this.error.set('No pudimos actualizar la persona.');
         this.saving.set(false);
+        this.showMessage('No pudimos actualizar la persona.', 'error');
       }
     });
   }
@@ -136,6 +144,7 @@ export class PeopleList implements OnInit {
   cancelEdit(): void {
     this.selectedPerson.set(null);
     this.personForm?.resetForm();
+    this.showMessage('Edición cancelada.', 'info');
   }
 
   confirmDeletePerson(person: Person): void {
@@ -163,10 +172,25 @@ export class PeopleList implements OnInit {
         if (this.selectedPerson()?.id === id) {
           this.cancelEdit();
         }
+
+        this.showMessage('Persona eliminada correctamente.', 'success');
       },
       error: () => {
         this.error.set('No pudimos eliminar la persona.');
+        this.showMessage('No pudimos eliminar la persona.', 'error');
       }
     });
   }
+
+private showMessage(
+  message: string,
+  type: 'success' | 'error' | 'info'
+): void {
+  this.snackBar.open(message, 'Cerrar', {
+    duration: 3500,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    panelClass: [`snackbar-${type}`]
+  });
+}
 }
